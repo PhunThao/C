@@ -10,77 +10,66 @@ const links = [
         "https://www.crescentmall.com.vn/tenants/ovs",
         "https://archive.org/details/the-pillow-book/page/n4/mode/1up",
 ];
-
-// Số lượng dấu ❌ muốn tạo (ví dụ 20)
-const TOTAL_X = 100;
-
-// Hàm tạo một dấu ❌ rơi từ trên xuống
 function createFallingX() {
-  // Tạo phần tử dấu ❌
   const xElement = document.createElement("div");
   xElement.textContent = "❌";
   xElement.classList.add("x-symbol");
 
-  // Vị trí ngẫu nhiên theo chiều ngang
+  // Khởi tạo vị trí ngang ngẫu nhiên, bắt đầu từ trên cùng (ẩn bên ngoài khung nhìn)
   let xPos = Math.random() * window.innerWidth;
-  // Bắt đầu từ phía trên màn hình (có thể đặt -50 để ẩn trước khi rơi vào màn hình)
-  let yPos = -50;
+  let yPos = -50; 
+  // Tốc độ rơi và di chuyển ngang ngẫu nhiên
+  let fallSpeed = 2 + Math.random() * 3; // từ 2 đến 5 pixel mỗi frame
+  let horizontalSpeed = (Math.random() - 0.5) * 2; // từ -1 đến 1 pixel mỗi frame
 
-  // Tốc độ rơi (pixel mỗi khung hình)
-  let fallSpeed = 2 + Math.random() * 3; // 2 -> 5
-  // Tốc độ di chuyển ngang (có thể = 0 nếu chỉ muốn rơi thẳng)
-  let horizontalSpeed = (Math.random() - 0.5) * 2; // -1 -> 1
-
-  // Đặt vị trí ban đầu
   xElement.style.left = `${xPos}px`;
   xElement.style.top = `${yPos}px`;
 
-  // Thêm vào body
   document.body.appendChild(xElement);
 
-  // Mỗi lần animation frame, cập nhật vị trí
   function fall() {
     yPos += fallSpeed;
     xPos += horizontalSpeed;
-
-    // Nếu chạm biên ngang, đổi hướng
+    
+    // Nếu chạm mép, đổi hướng ngang
     if (xPos < 0 || xPos > window.innerWidth - 40) {
       horizontalSpeed *= -1;
     }
-
-    // Cập nhật style
+    
     xElement.style.left = `${xPos}px`;
     xElement.style.top = `${yPos}px`;
-
-    // Nếu rơi quá khỏi màn hình, xóa dấu ❌
+    
+    // Khi vượt khỏi khung nhìn, loại bỏ phần tử
     if (yPos > window.innerHeight) {
       xElement.remove();
       return;
     }
-
-    // Tiếp tục requestAnimationFrame
+    
     requestAnimationFrame(fall);
   }
-  // Gọi hàm rơi
   fall();
 
-  // Sự kiện click vào dấu ❌
+  // Khi click vào dấu ❌, mở 3 link đồng thời và xóa nó khỏi trang
   xElement.addEventListener("click", () => {
-    openRandomLinks(3); // Luôn luôn mở 3 link
-    xElement.remove();  // Xóa dấu ❌ sau khi click
+    openRandomLinks(3);
+    xElement.remove();
   });
 }
 
-// Hàm mở 3 link ngẫu nhiên
 function openRandomLinks(count) {
-  // Copy mảng link và xáo trộn
+  // Xáo trộn danh sách link và mở count link đầu tiên
   const shuffledLinks = [...links].sort(() => Math.random() - 0.5);
   for (let i = 0; i < count; i++) {
     window.open(shuffledLinks[i], "_blank");
   }
 }
 
-// Tạo nhiều dấu ❌ rơi
-for (let i = 0; i < TOTAL_X; i++) {
+// Tạo một số dấu ❌ ban đầu (ví dụ 10)
+for (let i = 0; i < 10; i++) {
   createFallingX();
 }
+
+// Tạo dấu ❌ mới liên tục mỗi 1 giây
+setInterval(() => {
+  createFallingX();
+}, 1000);
