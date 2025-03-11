@@ -1,0 +1,15 @@
+Body {
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+  position: relative;
+}
+
+/* General format for ❌ */
+.x-symbol {
+  position: absolute;
+  font-size: 40px;
+  color: red;
+  cursor: pointer;
+  user-select: none;
+}
